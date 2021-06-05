@@ -1,82 +1,212 @@
+func &main() i32{
+var %a <[10]> i32
+dassign %1(conststr a32 "please input ten int number for bubble sort:\n")
+call Mars_PrintStr(regread a32 %1)
+var %i i32
+dassign %3(constval i32 0)
+dassign %i(regread i32 %3)
+@1LoopCheckLabel:
+dassign %4(constval i32 10)
+dassign %5(
+	lt i32(dread i32 %i,regread i32 %4))
+dassign %6(regread i32 %5)
+brfalse <@1LoopEndLabel>(regread i32 %6)
+dassign %7(constval i32 0)
+dassign %7(
+	add i32(regread i32 %7,dread i32 %i))
+dassign %7(
+	mul i32(regread i32 %7,constval i32 4))
+dassign %8(constval i32 0)
+dassign %7(
+	add i32(regread i32 %7,regread i32 %8))
+call Mars_GetInt()
+dassign %9(regread i32 %retval0)
+iassignfpoff <*[10]> i32(regread i32 %7,regread i32 %9)
+@1LoopStepLabel:
+dassign %10(dread i32 %i)
+dassign %11(constval i32 1)
+dassign %i(
+	add i32(dread i32 %i,regread i32 %11))
+goto <@1LoopCheckLabel>
+@1LoopEndLabel:
+dassign %12(conststr a32 "before bubble sort:\n")
+call Mars_PrintStr(regread a32 %12)
+var %i i32
+dassign %14(constval i32 0)
+dassign %i(regread i32 %14)
+@2LoopCheckLabel:
+dassign %15(constval i32 10)
+dassign %16(
+	lt i32(dread i32 %i,regread i32 %15))
+dassign %17(regread i32 %16)
+brfalse <@2LoopEndLabel>(regread i32 %17)
+dassign %18(constval i32 0)
+dassign %18(
+	add i32(regread i32 %18,dread i32 %i))
+dassign %18(
+	mul i32(regread i32 %18,constval i32 4))
+dassign %19(constval i32 0)
+dassign %18(
+	add i32(regread i32 %18,regread i32 %19))
+dassign %18(
+	ireadfpoff i32(regread i32 %18))
+call Mars_PrintInt(regread i32 %18)
+@2LoopStepLabel:
+dassign %20(dread i32 %i)
+dassign %21(constval i32 1)
+dassign %i(
+	add i32(dread i32 %i,regread i32 %21))
+goto <@2LoopCheckLabel>
+@2LoopEndLabel:
+dassign %22(conststr a32 "\n")
+call Mars_PrintStr(regread a32 %22)
+var %i i32
+dassign %24(constval i32 0)
+dassign %i(regread i32 %24)
+@3LoopCheckLabel:
+dassign %25(constval i32 10)
+dassign %26(
+	lt i32(dread i32 %i,regread i32 %25))
+dassign %27(regread i32 %26)
+brfalse <@3LoopEndLabel>(regread i32 %27)
+var %j i32
+dassign %29(constval i32 0)
+dassign %j(regread i32 %29)
+@4LoopCheckLabel:
+dassign %30(constval i32 10)
+dassign %31(
+	sub i32(regread i32 %30,dread i32 %i))
+dassign %32(regread i32 %31)
+dassign %33(constval i32 1)
+dassign %34(
+	sub i32(regread i32 %32,regread i32 %33))
+dassign %35(regread i32 %34)
+dassign %36(
+	lt i32(dread i32 %j,regread i32 %35))
+dassign %37(regread i32 %36)
+brfalse <@4LoopEndLabel>(regread i32 %37)
+dassign %38(constval i32 0)
+dassign %38(
+	add i32(regread i32 %38,dread i32 %j))
+dassign %38(
+	mul i32(regread i32 %38,constval i32 4))
+dassign %39(constval i32 0)
+dassign %38(
+	add i32(regread i32 %38,regread i32 %39))
+dassign %38(
+	ireadfpoff i32(regread i32 %38))
+dassign %40(constval i32 1)
+dassign %41(
+	add i32(dread i32 %j,regread i32 %40))
+dassign %42(regread i32 %41)
+dassign %43(constval i32 0)
+dassign %43(
+	add i32(regread i32 %43,regread i32 %42))
+dassign %43(
+	mul i32(regread i32 %43,constval i32 4))
+dassign %44(constval i32 0)
+dassign %43(
+	add i32(regread i32 %43,regread i32 %44))
+dassign %43(
+	ireadfpoff i32(regread i32 %43))
+dassign %45(
+	gt i32(regread i32 %38,regread i32 %43))
+dassign %46(regread i32 %45)
+brfalse <@1otherwise1>(regread i32 %46)
+var %tmp i32
+dassign %48(constval i32 0)
+dassign %48(
+	add i32(regread i32 %48,dread i32 %j))
+dassign %48(
+	mul i32(regread i32 %48,constval i32 4))
+dassign %49(constval i32 0)
+dassign %48(
+	add i32(regread i32 %48,regread i32 %49))
+dassign %48(
+	ireadfpoff i32(regread i32 %48))
+dassign %tmp(regread i32 %48)
+dassign %50(constval i32 0)
+dassign %50(
+	add i32(regread i32 %50,dread i32 %j))
+dassign %50(
+	mul i32(regread i32 %50,constval i32 4))
+dassign %51(constval i32 0)
+dassign %50(
+	add i32(regread i32 %50,regread i32 %51))
+dassign %52(constval i32 1)
+dassign %53(
+	add i32(dread i32 %j,regread i32 %52))
+dassign %54(regread i32 %53)
+dassign %55(constval i32 0)
+dassign %55(
+	add i32(regread i32 %55,regread i32 %54))
+dassign %55(
+	mul i32(regread i32 %55,constval i32 4))
+dassign %56(constval i32 0)
+dassign %55(
+	add i32(regread i32 %55,regread i32 %56))
+dassign %55(
+	ireadfpoff i32(regread i32 %55))
+iassignfpoff <*[10]> i32(regread i32 %50,regread i32 %55)
+dassign %57(constval i32 1)
+dassign %58(
+	add i32(dread i32 %j,regread i32 %57))
+dassign %59(regread i32 %58)
+dassign %60(constval i32 0)
+dassign %60(
+	add i32(regread i32 %60,regread i32 %59))
+dassign %60(
+	mul i32(regread i32 %60,constval i32 4))
+dassign %61(constval i32 0)
+dassign %60(
+	add i32(regread i32 %60,regread i32 %61))
+iassignfpoff <*[10]> i32(regread i32 %60,dread i32 %tmp)
+goto <@1endif>
+@1otherwise1:
+@1endif:
+@4LoopStepLabel:
+dassign %62(dread i32 %j)
+dassign %63(constval i32 1)
+dassign %j(
+	add i32(dread i32 %j,regread i32 %63))
+goto <@4LoopCheckLabel>
+@4LoopEndLabel:
+@3LoopStepLabel:
+dassign %64(dread i32 %i)
+dassign %65(constval i32 1)
+dassign %i(
+	add i32(dread i32 %i,regread i32 %65))
+goto <@3LoopCheckLabel>
+@3LoopEndLabel:
+dassign %66(conststr a32 "after bubble sort:\n")
+call Mars_PrintStr(regread a32 %66)
+var %i i32
+dassign %68(constval i32 0)
+dassign %i(regread i32 %68)
+@5LoopCheckLabel:
+dassign %69(constval i32 10)
+dassign %70(
+	lt i32(dread i32 %i,regread i32 %69))
+dassign %71(regread i32 %70)
+brfalse <@5LoopEndLabel>(regread i32 %71)
+dassign %72(constval i32 0)
+dassign %72(
+	add i32(regread i32 %72,dread i32 %i))
+dassign %72(
+	mul i32(regread i32 %72,constval i32 4))
+dassign %73(constval i32 0)
+dassign %72(
+	add i32(regread i32 %72,regread i32 %73))
+dassign %72(
+	ireadfpoff i32(regread i32 %72))
+call Mars_PrintInt(regread i32 %72)
+@5LoopStepLabel:
+dassign %74(dread i32 %i)
+dassign %75(constval i32 1)
+dassign %i(
+	add i32(dread i32 %i,regread i32 %75))
+goto <@5LoopCheckLabel>
+@5LoopEndLabel:
+dassign %76(constval i32 0)
+return (regread i32 %76)}
 
-0 (enter,_,_,main)
-1 (param,_,_,"please input ten int number for bubble sort:\n")
-2 (Call,_,_,Mars_PrintStr)
-3 (get_return,_,_,%1)
-4 (=,0,_,i)
-5 (<,i,10,%2)
-6 (test,_,_,%2)
-7 (jump_true,_,_,12)
-8 (jump_false,_,_,16)
-9 (=,i,_,%3)
-10 (++,i,_,i)
-11 (jump,_,_,5)
-12 (Call,_,_,Mars_GetInt)
-13 (get_return,_,_,%4)
-14 (=,%4,_,_)
-15 (jump,_,_,9)
-16 (param,_,_,"before bubble sort:\n")
-17 (Call,_,_,Mars_PrintStr)
-18 (get_return,_,_,%5)
-19 (=,0,_,i)
-20 (<,i,10,%6)
-21 (test,_,_,%6)
-22 (jump_true,_,_,27)
-23 (jump_false,_,_,31)
-24 (=,i,_,%7)
-25 (++,i,_,i)
-26 (jump,_,_,20)
-27 (param,_,_,_)
-28 (Call,_,_,Mars_PrintInt)
-29 (get_return,_,_,%8)
-30 (jump,_,_,24)
-31 (param,_,_,"\n")
-32 (Call,_,_,Mars_PrintStr)
-33 (get_return,_,_,%9)
-34 (=,0,_,i)
-35 (<,i,10,%10)
-36 (test,_,_,%10)
-37 (jump_true,_,_,42)
-38 (jump_false,_,_,64)
-39 (=,i,_,%11)
-40 (++,i,_,i)
-41 (jump,_,_,35)
-42 (=,0,_,j)
-43 (-,10,i,%12)
-44 (-,%12,1,%13)
-45 (<,j,%13,%14)
-46 (test,_,_,%14)
-47 (jump_true,_,_,52)
-48 (jump_false,_,_,63)
-49 (=,j,_,%15)
-50 (++,j,_,j)
-51 (jump,_,_,43)
-52 (+,j,1,%16)
-53 (>,_,_,%17)
-54 (test,_,_,%17)
-55 (jump_true,_,_,57)
-56 (jump,_,_,62)
-57 (=,,_,tmp)
-58 (+,j,1,%18)
-59 (=,_,_,_)
-60 (+,j,1,%19)
-61 (=,tmp,_,_)
-62 (jump,_,_,49)
-63 (jump,_,_,39)
-64 (param,_,_,"after bubble sort:\n")
-65 (Call,_,_,Mars_PrintStr)
-66 (get_return,_,_,%20)
-67 (=,0,_,i)
-68 (<,i,10,%21)
-69 (test,_,_,%21)
-70 (jump_true,_,_,75)
-71 (jump_false,_,_,79)
-72 (=,i,_,%22)
-73 (++,i,_,i)
-74 (jump,_,_,68)
-75 (param,_,_,_)
-76 (Call,_,_,Mars_PrintInt)
-77 (get_return,_,_,%23)
-78 (jump,_,_,72)
-79 (return,_,_,0)
-80 (leave,_,_,main)

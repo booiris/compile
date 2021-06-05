@@ -132,4 +132,5 @@
     ],
     "hindent-format.command": "E:\\Haskellstack\\Bin\\hindent",
     "files.encoding": "gbk",
+    "maven.view": "hierarchical",
 }

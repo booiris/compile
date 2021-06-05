@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "bit.minisys.minicc.BITMiniCC",
             "projectName": "bitmincc-clean",
-            "args": "/home/booiris/work4/BIT-MiniCC-master/test/nc_tests/0_BubbleSort.c"
+            "args": "/home/booiris/compile/test/nc_tests/0_BubbleSort.c"
         },
     ]
 }
