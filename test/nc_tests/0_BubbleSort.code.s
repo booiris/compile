@@ -54,8 +54,8 @@ _1LoopCheckLabel:
 	mul $23, $23, 4
 	li $25, 0
 	add $23, $23, $25
-	sw $23, -68($fp)
 	sw $24, -44($fp)
+	sw $23, -68($fp)
 	subu $sp, $sp, 4
 	sw $fp, ($sp)
 	move $fp, $sp
@@ -64,8 +64,8 @@ _1LoopCheckLabel:
 	lw $31, 20($sp)
 	lw $fp, ($sp)
 	addu $sp, $sp, 4
-	lw $23, -68($fp)
 	lw $24, -44($fp)
+	lw $23, -68($fp)
 	move $25, $2
 	subu $v1, $fp, $23
 	subu $v1, $v1, 4
