@@ -22,10 +22,6 @@ public class myCodeGen implements IMiniCCCodeGen {
 
 		if (cfg.target.equals("mips")) {
 			
-		} else if (cfg.target.equals("riscv")) {
-			// TODO:
-		} else if (cfg.target.equals("x86")) {
-			// TODO:
 		}
 
 		System.out.println("7. Target code generation finished!");
