@@ -31,7 +31,7 @@ public class MyICPrinter {
 			String num = String.format("%d", cnt);
 			if (op == "enter")
 				sb.append("\n");
-			sb.append(num + " (" + op + "," + opnd1 + "," + opnd2 + "," + res + ")\n");
+			sb.append(num + " " + op + "," + opnd1 + "," + opnd2 + "," + res + "\n");
 			cnt++;
 		}
 		// write

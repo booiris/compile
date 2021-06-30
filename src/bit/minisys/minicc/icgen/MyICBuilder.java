@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import bit.minisys.minicc.internal.ir.x;
 import bit.minisys.minicc.parser.ast.*;
@@ -15,6 +15,7 @@ public class MyICBuilder implements ASTVisitor {
 	private List<Quat> quats; // 生成的四元式列表
 	private Integer temp_id; // 临时变量编号
 	private Map<String, Integer> label;
+	Stack<List<String>> var_list = new Stack<List<String>>();
 
 	public MyICBuilder() {
 		map = new HashMap<ASTNode, ASTNode>();
@@ -29,9 +30,14 @@ public class MyICBuilder implements ASTVisitor {
 
 	@Override
 	public void visit(ASTCompilationUnit program) throws Exception {
+		var_list.add(new ArrayList<String>());
 		for (ASTNode node : program.items) {
-			if (node instanceof ASTFunctionDefine)
+			if (node instanceof ASTFunctionDefine) {
+				var_list.add(new ArrayList<String>());
 				visit((ASTFunctionDefine) node);
+				var_list.pop();
+				temp_id = 0;
+			}
 			if (node instanceof ASTDeclaration)
 				visit((ASTDeclaration) node);
 		}
@@ -50,37 +56,50 @@ public class MyICBuilder implements ASTVisitor {
 			visit(x);
 	}
 
+	int arr_cnt = 1;
+
 	@Override
 	public void visit(ASTArrayDeclarator arrayDeclarator) throws Exception {
-		visit(arrayDeclarator.declarator);
-		visit(arrayDeclarator.expr);
+		int size = ((ASTIntegerConstant) arrayDeclarator.expr).value * 4;
+		arr_cnt *= size;
+		if (arrayDeclarator.declarator instanceof ASTVariableDeclarator) {
+			String name = arrayDeclarator.declarator.getName();
+			quats.add(new Quat("new", (ASTNode) new ASTIntegerConstant(arr_cnt, 1), null,
+					(ASTNode) new ASTStringConstant(name, 1)));
+			arr_cnt = 1;
+		} else
+			visit(arrayDeclarator.declarator);
 	}
 
 	@Override
 	public void visit(ASTVariableDeclarator variableDeclarator) throws Exception {
-		// TODO Auto-generated method stub
-
+		String name = variableDeclarator.getName();
+		var_list.peek().add(name);
+		quats.add(new Quat("new", (ASTNode) new ASTIntegerConstant(4, 1), null,
+				(ASTNode) new ASTStringConstant(name, 1)));
 	}
 
 	@Override
 	public void visit(ASTFunctionDeclarator functionDeclarator) throws Exception {
-		visit(functionDeclarator.declarator);
 		for (ASTParamsDeclarator x : functionDeclarator.params)
 			visit(x);
-
 	}
 
 	@Override
 	public void visit(ASTParamsDeclarator paramsDeclarator) throws Exception {
 		visit(paramsDeclarator.declarator);
+		String name = paramsDeclarator.declarator.getName();
+		quats.add(new Quat("get_param", null, null, new ASTStringConstant(name, 1)));
 	}
 
 	@Override
 	public void visit(ASTArrayAccess arrayAccess) throws Exception {
-		visit(arrayAccess.arrayName);
-		for (ASTExpression x : arrayAccess.elements)
-			visit(x);
-
+		String name = ((ASTIdentifier) arrayAccess.arrayName).value;
+		ASTNode temp = new TemporaryValue(++temp_id);
+		visit(arrayAccess.elements.get(0));
+		ASTNode a = (ASTNode) map.get(arrayAccess.elements.get(0));
+		quats.add(new Quat("=[]", new ASTStringConstant(name, 1), a, temp));
+		map.put(arrayAccess, temp);
 	}
 
 	@Override
@@ -89,41 +108,50 @@ public class MyICBuilder implements ASTVisitor {
 		ASTNode res = null;
 		ASTNode opnd1 = null;
 		ASTNode opnd2 = null;
+		boolean flag = false;
 
 		if (op.equals("=")) {
 			// 赋值操作
 			// 获取被赋值的对象res
-			visit(binaryExpression.expr1);
-			res = map.get(binaryExpression.expr1);
+			flag = true;
 			// 判断源操作数类型, 为了避免出现a = b + c; 生成两个四元式：tmp1 = b + c; a = tmp1;的情况。也可以用别的方法解决
 			if (binaryExpression.expr2 instanceof ASTBinaryExpression) {
 				ASTBinaryExpression value = (ASTBinaryExpression) binaryExpression.expr2;
 				op = value.op.value;
-				visit(value.expr1);
-				opnd1 = map.get(value.expr1);
 				visit(value.expr2);
 				opnd2 = map.get(value.expr2);
+				visit(value.expr1);
+				opnd1 = map.get(value.expr1);
 			} else {
 				visit(binaryExpression.expr2);
 				opnd1 = map.get(binaryExpression.expr2);
 			}
 
-		} else {
 			visit(binaryExpression.expr1);
-			opnd1 = map.get(binaryExpression.expr1);
+			res = map.get(binaryExpression.expr1);
+
+		} else {
 			visit(binaryExpression.expr2);
 			opnd2 = map.get(binaryExpression.expr2);
-			if (op.contains("=") && !op.equals("==")) {
+			visit(binaryExpression.expr1);
+			opnd1 = map.get(binaryExpression.expr1);
+			if (op.equals(">") || op.equals(">=") || op.equals("<") || op.equals("<=")) {
+				res = new TemporaryValue(++temp_id);
+			} else if (op.contains("=") && !op.equals("==")) {
+				flag = true;
 				op = op.substring(0, op.length() - 1);
 				res = opnd1;
 			} else
 				res = new TemporaryValue(++temp_id);
 		}
-
 		// build quat
 		Quat quat = new Quat(op, opnd1, opnd2, res);
 		quats.add(quat);
 		map.put(binaryExpression, res);
+		if (binaryExpression.expr1 instanceof ASTArrayAccess && flag) {
+			op = "[]=";
+			quats.add(new Quat(op, null, null, res));
+		}
 	}
 
 	@Override
@@ -217,7 +245,9 @@ public class MyICBuilder implements ASTVisitor {
 		for (ASTExpression x : funcCall.argList) {
 			visit(x);
 			ASTNode node = map.get(x);
-			quats.add(new Quat("param", null, null, node));
+			ASTNode temp = new TemporaryValue(++temp_id);
+			quats.add(new Quat("=", node, null, temp));
+			quats.add(new Quat("param", null, null, temp));
 		}
 		visit(funcCall.funcname);
 		ASTIdentifier name = (ASTIdentifier) funcCall.funcname;
@@ -240,6 +270,7 @@ public class MyICBuilder implements ASTVisitor {
 
 	@Override
 	public void visit(ASTInitList init_list) throws Exception {
+		visit(init_list.declarator);
 		if (init_list.exprs != null) {
 			String op = "=";
 			ASTNode res = (ASTNode) init_list.declarator;
@@ -255,7 +286,9 @@ public class MyICBuilder implements ASTVisitor {
 					visit(value.expr2);
 					opnd2 = map.get(value.expr2);
 				} else {
-					opnd1 = (ASTNode) temp;
+					visit(temp);
+					ASTNode a = map.get(temp);
+					opnd1 = a;
 				}
 				Quat quat = new Quat(op, opnd1, opnd2, res);
 				quats.add(quat);
@@ -383,15 +416,25 @@ public class MyICBuilder implements ASTVisitor {
 					opnd2 = null;
 					op = "return";
 					quats.add(new Quat(op, opnd1, opnd2, res));
+					quats.add(new Quat("leave", null, null, new ASTIntegerConstant(temp_id, 0)));
 				} else {
 					res = (ASTNode) temp;
-					Quat quat = new Quat(op, opnd1, opnd2, res);
+					ASTNode t = new TemporaryValue(++temp_id);
+					Quat quat = new Quat("=", res, opnd2, t);
 					quats.add(quat);
+					quat = new Quat(op, opnd1, opnd2, t);
+					quats.add(quat);
+					quats.add(new Quat("leave", null, null, new ASTIntegerConstant(temp_id, 0)));
 				}
-			} else
+			} else {
 				System.out.println("return exps length not 1");
-		} else
+			}
+
+		} else {
 			quats.add(new Quat("return", null, null, null));
+			quats.add(new Quat("leave", null, null, new ASTIntegerConstant(temp_id, 0)));
+		}
+
 	}
 
 	@Override
@@ -462,8 +505,8 @@ public class MyICBuilder implements ASTVisitor {
 	public void visit(ASTFunctionDefine functionDefine) throws Exception {
 		String name = functionDefine.declarator.getName();
 		quats.add(new Quat("enter", null, null, new ASTIdentifier(name, null)));
+		visit(functionDefine.declarator);
 		visit(functionDefine.body);
-		quats.add(new Quat("leave", null, null, new ASTIdentifier(name, null)));
 	}
 
 	@Override
@@ -478,6 +521,7 @@ public class MyICBuilder implements ASTVisitor {
 
 	@Override
 	public void visit(ASTStatement statement) throws Exception {
+		var_list.add(new ArrayList<String>());
 		if (statement instanceof ASTIterationDeclaredStatement) {
 			visit((ASTIterationDeclaredStatement) statement);
 		} else if (statement instanceof ASTIterationStatement) {
@@ -499,6 +543,7 @@ public class MyICBuilder implements ASTVisitor {
 		} else if (statement instanceof ASTLabeledStatement) {
 			visit((ASTLabeledStatement) statement);
 		}
+		var_list.pop();
 	}
 
 	@Override

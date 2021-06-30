@@ -2,9 +2,15 @@ int fibonacci(int num){
 	int res;
 	if(num < 1){
 		res = 0;
-	}else if(num <= 2){
+		return res;
+	}
+	else if (num <= 2)
+	{
 		res = 1;
-	}else{
+		return res;
+	}
+	else
+	{
 		res = fibonacci(num-1)+fibonacci(num-2);
 	}
 	return res;

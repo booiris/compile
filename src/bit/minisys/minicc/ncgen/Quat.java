@@ -6,6 +6,7 @@ public class Quat {
 	public String res;
 	public String opnd1;
 	public String opnd2;
+	public int label = -1;
 
 	public Quat(String op, String opnd1, String opnd2, String res) {
 		this.op = op;
