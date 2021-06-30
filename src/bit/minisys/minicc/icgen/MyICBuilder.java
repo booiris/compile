@@ -277,9 +277,8 @@ public class MyICBuilder implements ASTVisitor {
 		for (ASTExpression x : iterationDeclaredStat.cond) {
 			visit(x);
 			ASTNode temp = map.get(x);
-			quats.add(new Quat("test", null, null, temp));
-			quats.add(new Quat("jump_true", null, null, null));
-			quats.add(new Quat("jump_false", null, null, null));
+			quats.add(new Quat("jump_true", temp, null, null));
+			quats.add(new Quat("jump_false", temp, null, null));
 		}
 		nxt_index = quats.size();
 		for (ASTExpression x : iterationDeclaredStat.step)
@@ -313,9 +312,8 @@ public class MyICBuilder implements ASTVisitor {
 		for (ASTExpression x : iterationStat.cond) {
 			visit(x);
 			ASTNode temp = map.get(x);
-			quats.add(new Quat("test", null, null, temp));
-			quats.add(new Quat("jump_true", null, null, null));
-			quats.add(new Quat("jump_false", null, null, null));
+			quats.add(new Quat("jump_true", temp, null, null));
+			quats.add(new Quat("jump_false", temp, null, null));
 		}
 		nxt_index = quats.size();
 		for (ASTExpression x : iterationStat.step)
@@ -403,10 +401,9 @@ public class MyICBuilder implements ASTVisitor {
 		for (ASTExpression x : selectionStat.cond) {
 			visit(x);
 			ASTNode temp = map.get(x);
-			quats.add(new Quat("test", null, null, temp));
-			quats.add(new Quat("jump_true", null, null, null));
+			quats.add(new Quat("jump_true", temp, null, null));
 			if (selectionStat.otherwise != null) {
-				quats.add(new Quat("jump_false", null, null, null));
+				quats.add(new Quat("jump_false", temp, null, null));
 			}
 			quats.add(new Quat("jump", null, null, null));
 		}
