@@ -12,6 +12,8 @@ import bit.minisys.minicc.ncgen.IMiniCCCodeGen;
 
 public class myCodeGen implements IMiniCCCodeGen {
 
+	String nc_code = "";
+
 	public myCodeGen() {
 
 	}
@@ -21,7 +23,12 @@ public class myCodeGen implements IMiniCCCodeGen {
 		String oFile = MiniCCUtil.remove2Ext(iFile) + MiniCCCfg.MINICC_CODEGEN_OUTPUT_EXT;
 
 		if (cfg.target.equals("mips")) {
-			
+			System.out.println(oFile);
+			nc_code = nc_code + "\n";
+			FileWriter temp = new FileWriter(oFile);
+			temp.write(nc_code);
+			temp.flush();
+			temp.close();git
 		}
 
 		System.out.println("7. Target code generation finished!");
