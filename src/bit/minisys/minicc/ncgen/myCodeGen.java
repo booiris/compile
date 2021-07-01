@@ -70,7 +70,8 @@ public class myCodeGen implements IMiniCCCodeGen {
 	void quat_to_nc() {
 		for (Quat x : quat_list) {
 			String op = x.op;
-			if (op.equals("jump") || op.equals("jump_true") || op.equals("jump_false") || op.equals("goto")) {
+			if (op.equals("jump") || op.equals("jump_true") || op.equals("jump_false") || op.equals("goto")
+					|| op.equals("break") || op.equals("continue")) {
 				int index = Integer.valueOf(x.res);
 				if (quat_list.get(index).label == -1) {
 					quat_list.get(index).label = index;
