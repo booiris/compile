@@ -270,6 +270,7 @@ public class semantic_builder implements ASTVisitor {
             visit(x);
         for (ASTExpression x : iterationDeclaredStat.step)
             visit(x);
+        visit(iterationDeclaredStat.stat);
     }
 
     @Override
@@ -280,6 +281,7 @@ public class semantic_builder implements ASTVisitor {
             visit(x);
         for (ASTExpression x : iterationStat.step)
             visit(x);
+        visit(iterationStat.stat);
     }
 
     @Override
