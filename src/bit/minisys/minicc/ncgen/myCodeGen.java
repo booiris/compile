@@ -88,6 +88,10 @@ public class myCodeGen implements IMiniCCCodeGen {
 
 	int get_cnt = 0;
 
+	int fun_temp_cnt;
+	int max_data = 0;
+	int func_cnt = 0;
+
 	void gen_quat(Quat now) {
 		String op = now.op;
 		if (now.label != -1) {
@@ -98,8 +102,13 @@ public class myCodeGen implements IMiniCCCodeGen {
 			nc_code.add("subu $sp, $sp, 4");
 			nc_code.add("sw $fp, ($sp)");
 			nc_code.add("move $fp, $sp");
+			fun_temp_cnt = Integer.valueOf(now.opnd1);
+			nc_code.add("subu $sp, $sp, " + String.valueOf(fun_temp_cnt * 4));
 			func_index = nc_code.size();
+			var_set.clear();
 			get_cnt = 0;
+			max_data = fun_temp_cnt * 4;
+			func_cnt++;
 		} else if (op.equals("param")) {
 			int temp_index = Integer.valueOf(now.res.substring(1));
 			if (param_cnt == 0) {
@@ -124,13 +133,8 @@ public class myCodeGen implements IMiniCCCodeGen {
 				nc_code.add("lw $v0, -" + String.valueOf(temp_index * 4) + "($fp)");
 			}
 		} else if (op.equals("leave")) {
-			int temp_cnt = Integer.valueOf(now.res);
-			nc_code.add(func_index, "subu $sp, $sp, " + String.valueOf(temp_cnt * 4));
-			nc_code.add("addu $sp, $sp, " + String.valueOf(temp_cnt * 4));
-			nc_code.add("lw $fp, ($sp)");
-			nc_code.add("addu $sp, $sp, 4");
-			nc_code.add("jr $ra");
-		} else if (op.equals("jump") || op.equals("goto")) {
+			nc_code.add("j func_" + String.valueOf(func_cnt) + "_end");
+		} else if (op.equals("jump") || op.equals("goto") || op.equals("break") || op.equals("continue")) {
 			nc_code.add("j _temp_label_" + String.valueOf(now.res));
 		} else if (op.equals("jump_true")) {
 			if (now.opnd1.charAt(0) == '%') {
@@ -145,14 +149,30 @@ public class myCodeGen implements IMiniCCCodeGen {
 				nc_code.add("beq $t0, $0, _temp_label_" + String.valueOf(now.res));
 			}
 		} else if (op.equals("new")) {
-			var_set.put(now.res, Integer.valueOf(now.opnd1));
+			max_data += Integer.valueOf(now.opnd1);
+			var_set.put(now.res, max_data);
 		} else if (op.equals("get_param")) {
+			int data_index = var_set.get(now.res);
+			String temp = "-" + String.valueOf(data_index) + "($fp)";
 			if (get_cnt == 0) {
-				nc_code.add("sw $a0, " + now.res);
+				nc_code.add("sw $a0, " + temp);
 			} else if (get_cnt == 1) {
-				nc_code.add("sw $a1, " + now.res);
+				nc_code.add("sw $a1, " + temp);
 			}
 
+		} else if (op.equals("end")) {
+			int sum = 0;
+			for (Map.Entry<String, Integer> x : var_set.entrySet()) {
+				sum = sum > x.getValue() ? sum : x.getValue();
+			}
+			sum -= fun_temp_cnt * 4;
+			nc_code.add(func_index, "subu $sp, $sp, " + String.valueOf(sum));
+			nc_code.add("func_" + String.valueOf(func_cnt) + "_end:");
+			nc_code.add("addu $sp, $sp, " + String.valueOf(sum));
+			nc_code.add("addu $sp, $sp, " + String.valueOf(fun_temp_cnt * 4));
+			nc_code.add("lw $fp, ($sp)");
+			nc_code.add("addu $sp, $sp, 4");
+			nc_code.add("jr $ra");
 		} else {
 			check_symbol(now);
 		}
@@ -174,6 +194,10 @@ public class myCodeGen implements IMiniCCCodeGen {
 		} else if (var_name.charAt(0) == '%') {
 			int temp_index = Integer.valueOf(var_name.substring(1));
 			name = "-" + String.valueOf(temp_index * 4) + "($fp)";
+		} else if (var_set.containsKey(var_name)) {
+			int data_index = var_set.get(var_name);
+			nc_code.add("lw " + reg_name + ", -" + String.valueOf(data_index) + "($fp)");
+			return;
 		} else {
 			name = var_name;
 		}
@@ -184,6 +208,10 @@ public class myCodeGen implements IMiniCCCodeGen {
 		if (var_name.charAt(0) == '%') {
 			int temp_index = Integer.valueOf(var_name.substring(1));
 			nc_code.add("sw " + reg_name + ", -" + String.valueOf(temp_index * 4) + "($fp)");
+		} else if (var_set.containsKey(var_name)) {
+			int data_index = var_set.get(var_name);
+			nc_code.add("sw " + reg_name + ", -" + String.valueOf(data_index) + "($fp)");
+			return;
 		} else {
 			nc_code.add("sw " + reg_name + ", " + var_name);
 		}
@@ -270,6 +298,24 @@ public class myCodeGen implements IMiniCCCodeGen {
 			nc_code.add("li $t3, 0");
 			nc_code.add("jmp_" + String.valueOf(l_cnt) + ":");
 			save(now.res, "$t3");
+		} else if (op.equals("!=")) {
+			reg(now.opnd1, "$t0");
+			reg(now.opnd2, "$t1");
+			nc_code.add("li $t3, 1");
+			l_cnt++;
+			nc_code.add("bne $t0, $t1, jmp_" + String.valueOf(l_cnt));
+			nc_code.add("li $t3, 0");
+			nc_code.add("jmp_" + String.valueOf(l_cnt) + ":");
+			save(now.res, "$t3");
+		} else if (op.equals("==")) {
+			reg(now.opnd1, "$t0");
+			reg(now.opnd2, "$t1");
+			nc_code.add("li $t3, 1");
+			l_cnt++;
+			nc_code.add("beq $t0, $t1, jmp_" + String.valueOf(l_cnt));
+			nc_code.add("li $t3, 0");
+			nc_code.add("jmp_" + String.valueOf(l_cnt) + ":");
+			save(now.res, "$t3");
 		} else if (op.equals("&&")) {
 			reg(now.opnd1, "$t0");
 			reg(now.opnd2, "$t1");
@@ -291,7 +337,14 @@ public class myCodeGen implements IMiniCCCodeGen {
 			nc_code.add("jmp_" + String.valueOf(l_cnt) + ":");
 			save(now.res, "$t3");
 		} else if (op.equals("=[]")) {
-			nc_code.add("la $t5, " + now.opnd1);
+			String var_name = now.opnd1;
+			if (var_set.containsKey(var_name)) {
+				int data_index = var_set.get(var_name);
+				nc_code.add("la $t5" + ", -" + String.valueOf(data_index) + "($fp)");
+				return;
+			} else {
+				nc_code.add("la $t5" + ", " + var_name);
+			}
 			reg(now.opnd2, "$t6");
 			nc_code.add("li $t7, 4");
 			nc_code.add("mult $t6, $t7");

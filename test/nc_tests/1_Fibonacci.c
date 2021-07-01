@@ -2,12 +2,10 @@ int fibonacci(int num){
 	int res;
 	if(num < 1){
 		res = 0;
-		return res;
 	}
 	else if (num <= 2)
 	{
 		res = 1;
-		return res;
 	}
 	else
 	{

@@ -1,72 +1,101 @@
+func &perfectNumber(var %n i32) void{
+var %p <[80]> i32
+var %i i32
+var %num i32
+var %count i32
+var %s i32
+var %c i32
+dassign %7(constval i32 0)
+dassign %c(regread i32 %7)
+dassign %8(constval i32 2)
+dassign %num(regread i32 %8)
+@1LoopCheckLabel:
+dassign %9(
+	lt i32(dread i32 %num,dread i32 %n))
+dassign %10(regread i32 %9)
+brfalse <@1LoopEndLabel>(regread i32 %10)
+dassign %11(constval i32 0)
+dassign %count(regread i32 %11)
+dassign %s(dread i32 %num)
+dassign %12(constval i32 1)
+dassign %i(regread i32 %12)
+@2LoopCheckLabel:
+dassign %13(constval i32 2)
+dassign %14(
+	div i32(dread i32 %num,regread i32 %13))
+dassign %15(regread i32 %14)
+dassign %16(constval i32 1)
+dassign %17(
+	add i32(regread i32 %15,regread i32 %16))
+dassign %18(regread i32 %17)
+dassign %19(
+	lt i32(dread i32 %i,regread i32 %18))
+dassign %20(regread i32 %19)
+brfalse <@2LoopEndLabel>(regread i32 %20)
+dassign %21(
+	rem i32(dread i32 %num,dread i32 %i))
+dassign %22(regread i32 %21)
+dassign %23(constval i32 0)
+dassign %24(
+	eq i32(regread i32 %22,regread i32 %23))
+dassign %25(regread i32 %24)
+brfalse <@1otherwise1>(regread i32 %25)
+dassign %26(dread i32 %count)
+dassign %27(constval i32 1)
+dassign %count(
+	add i32(dread i32 %count,regread i32 %27))
+dassign %28(constval i32 0)
+dassign %28(
+	add i32(regread i32 %28,regread i32 %26))
+dassign %28(
+	mul i32(regread i32 %28,constval i32 4))
+dassign %29(constval i32 4)
+dassign %28(
+	add i32(regread i32 %28,regread i32 %29))
+iassignfpoff <*[80]> i32(regread i32 %28,dread i32 %i)
+dassign %30(
+	sub i32(dread i32 %s,dread i32 %i))
+dassign %s(regread i32 %30)
+goto <@1endif>
+@1otherwise1:
+@1endif:
+@2LoopStepLabel:
+dassign %31(dread i32 %i)
+dassign %32(constval i32 1)
+dassign %i(
+	add i32(dread i32 %i,regread i32 %32))
+goto <@2LoopCheckLabel>
+@2LoopEndLabel:
+dassign %33(constval i32 0)
+dassign %34(
+	eq i32(regread i32 %33,dread i32 %s))
+dassign %35(regread i32 %34)
+brfalse <@2otherwise1>(regread i32 %35)
+call Mars_PrintInt(dread i32 %num)
+dassign %36(dread i32 %c)
+dassign %37(constval i32 1)
+dassign %c(
+	add i32(dread i32 %c,regread i32 %37))
+goto <@2endif>
+@2otherwise1:
+@2endif:
+@1LoopStepLabel:
+dassign %38(dread i32 %num)
+dassign %39(constval i32 1)
+dassign %num(
+	add i32(dread i32 %num,regread i32 %39))
+goto <@1LoopCheckLabel>
+@1LoopEndLabel:
+dassign %40(conststr a32 "The sum is :\n")
+call Mars_PrintStr(regread a32 %40)
+call Mars_PrintInt(dread i32 %c)
+return ()}
 
-0 enter,_,_,perfectNumber
-1 new,4,_,n
-2 new,320,_,p
-3 new,4,_,i
-4 new,4,_,num
-5 new,4,_,count
-6 new,4,_,s
-7 new,4,_,c
-8 =,0,_,c
-9 =,2,_,num
-10 <,num,n,%1
-11 jump_true,%1,_,16
-12 jump_false,%1,_,48
-13 =,num,_,%2
-14 ++,num,_,num
-15 jump,_,_,10
-16 =,0,_,count
-17 =,num,_,s
-18 =,1,_,i
-19 /,num,2,%3
-20 +,%3,1,%4
-21 <,i,%4,%5
-22 jump_true,%5,_,27
-23 jump_false,%5,_,38
-24 =,i,_,%6
-25 ++,i,_,i
-26 jump,_,_,19
-27 %,num,i,%7
-28 ==,%7,0,%8
-29 jump_true,%8,_,31
-30 jump,_,_,37
-31 =,count,_,%10
-32 ++,count,_,count
-33 =[],p,%10,%9
-34 =,i,_,%9
-35 []=,_,_,%9
-36 -,s,i,s
-37 jump,_,_,24
-38 ==,0,s,%11
-39 jump_true,%11,_,41
-40 jump,_,_,47
-41 =,num,_,%12
-42 param,_,_,%12
-43 Call,_,_,Mars_PrintInt
-44 get_return,_,_,%13
-45 =,c,_,%14
-46 ++,c,_,c
-47 jump,_,_,13
-48 =,"The sum is :\n",_,%15
-49 param,_,_,%15
-50 Call,_,_,Mars_PrintStr
-51 get_return,_,_,%16
-52 =,c,_,%17
-53 param,_,_,%17
-54 Call,_,_,Mars_PrintInt
-55 get_return,_,_,%18
-56 return,_,_,_
-57 leave,_,_,18
+func &main() i32{
+dassign %41(conststr a32 "All perfect numbers within 100:\n")
+call Mars_PrintStr(regread a32 %41)
+dassign %42(constval i32 100)
+call perfectNumber(regread i32 %42)
+dassign %43(constval i32 0)
+return (regread i32 %43)}
 
-58 enter,_,_,main
-59 =,"All perfect numbers within 100:\n",_,%1
-60 param,_,_,%1
-61 Call,_,_,Mars_PrintStr
-62 get_return,_,_,%2
-63 =,100,_,%3
-64 param,_,_,%3
-65 Call,_,_,perfectNumber
-66 get_return,_,_,%4
-67 =,0,_,%5
-68 return,_,_,%5
-69 leave,_,_,5

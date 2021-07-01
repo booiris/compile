@@ -444,14 +444,11 @@ public class MyICBuilder implements ASTVisitor {
 		for (ASTExpression x : selectionStat.cond) {
 			visit(x);
 			ASTNode temp = map.get(x);
-			quats.add(new Quat("jump_true", temp, null, null));
-			if (selectionStat.otherwise != null) {
-				quats.add(new Quat("jump_false", temp, null, null));
-			}
-			quats.add(new Quat("jump", null, null, null));
+			quats.add(new Quat("jump_false", temp, null, null));
 		}
-		true_index = quats.size();
 		visit(selectionStat.then);
+		false_index = quats.size();
+		quats.add(new Quat("jump", null, null, null));
 		if (selectionStat.otherwise != null) {
 			false_index = quats.size();
 			visit(selectionStat.otherwise);
@@ -504,9 +501,12 @@ public class MyICBuilder implements ASTVisitor {
 	@Override
 	public void visit(ASTFunctionDefine functionDefine) throws Exception {
 		String name = functionDefine.declarator.getName();
+		int now_index = quats.size();
 		quats.add(new Quat("enter", null, null, new ASTIdentifier(name, null)));
 		visit(functionDefine.declarator);
 		visit(functionDefine.body);
+		quats.get(now_index).opnd1 = new ASTIntegerConstant(temp_id, 1);
+		quats.add(new Quat("end", null, null, null));
 	}
 
 	@Override
