@@ -28,13 +28,11 @@ public class myCodeGen implements IMiniCCCodeGen {
 
 	}
 
+	int main_index;
+
 	void init() {
 		nc_code.add(
 				"__init:\nlui $sp, 0x8000\naddi $sp, $sp, 0x0000\nmove $fp, $sp\nadd $gp, $gp, 0x8000\njal main\nli $v0, 10\nsyscall\nMars_PrintInt:\nli $v0, 1\nsyscall\nli $v0, 4\nmove $v1, $a0\nla $a0, blank\nsyscall\nmove $a0, $v1\njr $ra\nMars_GetInt:\nli $v0, 5\nsyscall\njr $ra\nMars_PrintStr:\nli $v0, 4\nsyscall\njr $ra");
-	}
-
-	void gen_local_data() {
-
 	}
 
 	Map<String, Integer> sc = new HashMap<String, Integer>();

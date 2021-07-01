@@ -1,9 +1,4 @@
 .data
-	j : .space 216
-	i : .space 224
-	tmp : .space 220
-	s : .space 160
-	a : .space 200
 	_1sc : .asciiz "before bubble sort:\n"
 	_3sc : .asciiz "after bubble sort:\n"
 	_0sc : .asciiz "please input ten int number for bubble sort:\n"
@@ -80,7 +75,7 @@ _temp_label_16:
 	sw $v0, -20($fp)
 	lw $ra, ($sp)
 	addu $sp, $sp, 4
-	la $t5, a
+	la $t5, -200($fp)
 	lw $t6, -204($fp)
 	li $t7, 4
 	mult $t6, $t7
@@ -126,7 +121,7 @@ _temp_label_31:
 	sw $t0, -208($fp)
 	j _temp_label_28
 _temp_label_34:
-	la $t5, a
+	la $t5, -200($fp)
 	lw $t6, -208($fp)
 	li $t7, 4
 	mult $t6, $t7
@@ -211,16 +206,16 @@ _temp_label_62:
 	lw $t0, -216($fp)
 	li $t1, 1
 	add $t2, $t0, $t1
-	sw $t2, -92($fp)
-	la $t5, a
-	lw $t6, -92($fp)
+	sw $t2, -88($fp)
+	la $t5, -200($fp)
+	lw $t6, -88($fp)
 	li $t7, 4
 	mult $t6, $t7
 	mflo $t6
 	add $t5, $t5, $t6
 	lw $t6, ($t5)
-	sw $t6, -88($fp)
-	la $t5, a
+	sw $t6, -92($fp)
+	la $t5, -200($fp)
 	lw $t6, -216($fp)
 	li $t7, 4
 	mult $t6, $t7
@@ -229,7 +224,7 @@ _temp_label_62:
 	lw $t6, ($t5)
 	sw $t6, -96($fp)
 	lw $t0, -96($fp)
-	lw $t1, -88($fp)
+	lw $t1, -92($fp)
 	li $t3, 1
 	bgt $t0, $t1, jmp_5
 	li $t3, 0
@@ -237,7 +232,7 @@ jmp_5:
 	sw $t3, -100($fp)
 	lw $t0, -100($fp)
 	beq $t0, $0, _temp_label_79
-	la $t5, a
+	la $t5, -200($fp)
 	lw $t6, -216($fp)
 	li $t7, 4
 	mult $t6, $t7
@@ -250,16 +245,16 @@ jmp_5:
 	lw $t0, -216($fp)
 	li $t1, 1
 	add $t2, $t0, $t1
-	sw $t2, -112($fp)
-	la $t5, a
-	lw $t6, -112($fp)
+	sw $t2, -108($fp)
+	la $t5, -200($fp)
+	lw $t6, -108($fp)
 	li $t7, 4
 	mult $t6, $t7
 	mflo $t6
 	add $t5, $t5, $t6
 	lw $t6, ($t5)
-	sw $t6, -108($fp)
-	la $t5, a
+	sw $t6, -112($fp)
+	la $t5, -200($fp)
 	lw $t6, -216($fp)
 	li $t7, 4
 	mult $t6, $t7
@@ -267,25 +262,25 @@ jmp_5:
 	add $t5, $t5, $t6
 	lw $t6, ($t5)
 	sw $t6, -116($fp)
-	lw $t0, -108($fp)
+	lw $t0, -112($fp)
 	sw $t0, -116($fp)
 	lw $t0, -116($fp)
 	sw $t0, ($t5)
 	lw $t0, -216($fp)
 	li $t1, 1
 	add $t2, $t0, $t1
-	sw $t2, -124($fp)
-	la $t5, a
-	lw $t6, -124($fp)
+	sw $t2, -120($fp)
+	la $t5, -200($fp)
+	lw $t6, -120($fp)
 	li $t7, 4
 	mult $t6, $t7
 	mflo $t6
 	add $t5, $t5, $t6
 	lw $t6, ($t5)
-	sw $t6, -120($fp)
+	sw $t6, -124($fp)
 	lw $t0, -220($fp)
-	sw $t0, -120($fp)
-	lw $t0, -120($fp)
+	sw $t0, -124($fp)
+	lw $t0, -124($fp)
 	sw $t0, ($t5)
 _temp_label_79:
 	j _temp_label_80
@@ -326,7 +321,7 @@ _temp_label_91:
 	sw $t0, -224($fp)
 	j _temp_label_88
 _temp_label_94:
-	la $t5, a
+	la $t5, -200($fp)
 	lw $t6, -224($fp)
 	li $t7, 4
 	mult $t6, $t7

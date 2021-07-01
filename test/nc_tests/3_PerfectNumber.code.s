@@ -196,7 +196,7 @@ main:
 	sw $fp, ($sp)
 	move $fp, $sp
 	subu $sp, $sp, 20
-	subu $sp, $sp, -20
+	subu $sp, $sp, 0
 	la $t0, _1sc
 	sw $t0, -4($fp)
 	lw $a0, -4($fp)
@@ -220,7 +220,7 @@ main:
 	lw $v0, -20($fp)
 	j func_2_end
 func_2_end:
-	addu $sp, $sp, -20
+	addu $sp, $sp, 0
 	addu $sp, $sp, 20
 	lw $fp, ($sp)
 	addu $sp, $sp, 4

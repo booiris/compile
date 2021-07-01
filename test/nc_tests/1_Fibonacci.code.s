@@ -1,6 +1,4 @@
 .data
-	n : .space 44
-	res : .space 48
 	_1sc : .asciiz "This number's fibonacci value is :\n"
 	_0sc : .asciiz "Please input a number:\n"
 	blank : .asciiz " "
