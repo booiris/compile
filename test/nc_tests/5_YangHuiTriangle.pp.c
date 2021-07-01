@@ -25,5 +25,5 @@ void YangHuiTriangle()
 }
 int main(){
 	YangHuiTriangle();
-    return 0;
+	return 0;
 }

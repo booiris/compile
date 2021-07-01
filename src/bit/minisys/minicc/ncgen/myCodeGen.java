@@ -39,6 +39,7 @@ public class myCodeGen implements IMiniCCCodeGen {
 
 	Map<String, Integer> sc = new HashMap<String, Integer>();
 	Map<String, Integer> var_set = new HashMap<String, Integer>();
+	Map<String, Integer> global_var_set = new HashMap<String, Integer>();
 
 	void gen_global_data() {
 		nc_code.add(0, ".data");
@@ -47,7 +48,7 @@ public class myCodeGen implements IMiniCCCodeGen {
 			String temp = "_" + x.getValue().toString() + "sc : .asciiz \"" + x.getKey() + "\"";
 			nc_code.add(1, temp);
 		}
-		for (Map.Entry<String, Integer> x : var_set.entrySet()) {
+		for (Map.Entry<String, Integer> x : global_var_set.entrySet()) {
 			String temp = x.getKey() + " : .space " + String.valueOf(x.getValue());
 			nc_code.add(1, temp);
 		}
@@ -91,6 +92,7 @@ public class myCodeGen implements IMiniCCCodeGen {
 	int fun_temp_cnt;
 	int max_data = 0;
 	int func_cnt = 0;
+	boolean is_in_func = false;
 
 	void gen_quat(Quat now) {
 		String op = now.op;
@@ -109,6 +111,7 @@ public class myCodeGen implements IMiniCCCodeGen {
 			get_cnt = 0;
 			max_data = fun_temp_cnt * 4;
 			func_cnt++;
+			is_in_func = true;
 		} else if (op.equals("param")) {
 			int temp_index = Integer.valueOf(now.res.substring(1));
 			if (param_cnt == 0) {
@@ -149,8 +152,12 @@ public class myCodeGen implements IMiniCCCodeGen {
 				nc_code.add("beq $t0, $0, _temp_label_" + String.valueOf(now.res));
 			}
 		} else if (op.equals("new")) {
-			max_data += Integer.valueOf(now.opnd1);
-			var_set.put(now.res, max_data);
+			if (is_in_func) {
+				max_data += Integer.valueOf(now.opnd1);
+				var_set.put(now.res, max_data);
+			} else {
+				global_var_set.put(now.res, Integer.valueOf(now.opnd1) * 4);
+			}
 		} else if (op.equals("get_param")) {
 			int data_index = var_set.get(now.res);
 			String temp = "-" + String.valueOf(data_index) + "($fp)";
@@ -165,7 +172,8 @@ public class myCodeGen implements IMiniCCCodeGen {
 			for (Map.Entry<String, Integer> x : var_set.entrySet()) {
 				sum = sum > x.getValue() ? sum : x.getValue();
 			}
-			sum -= fun_temp_cnt * 4;
+			if (sum != 0)
+				sum -= fun_temp_cnt * 4;
 			nc_code.add(func_index, "subu $sp, $sp, " + String.valueOf(sum));
 			nc_code.add("func_" + String.valueOf(func_cnt) + "_end:");
 			nc_code.add("addu $sp, $sp, " + String.valueOf(sum));
@@ -173,6 +181,7 @@ public class myCodeGen implements IMiniCCCodeGen {
 			nc_code.add("lw $fp, ($sp)");
 			nc_code.add("addu $sp, $sp, 4");
 			nc_code.add("jr $ra");
+			is_in_func = false;
 		} else {
 			check_symbol(now);
 		}
@@ -341,7 +350,6 @@ public class myCodeGen implements IMiniCCCodeGen {
 			if (var_set.containsKey(var_name)) {
 				int data_index = var_set.get(var_name);
 				nc_code.add("la $t5" + ", -" + String.valueOf(data_index) + "($fp)");
-				return;
 			} else {
 				nc_code.add("la $t5" + ", " + var_name);
 			}

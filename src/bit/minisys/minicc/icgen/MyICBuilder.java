@@ -57,14 +57,16 @@ public class MyICBuilder implements ASTVisitor {
 	}
 
 	int arr_cnt = 1;
+	Map<String, Integer> arr_map = new HashMap<String, Integer>();
 
 	@Override
 	public void visit(ASTArrayDeclarator arrayDeclarator) throws Exception {
-		int size = ((ASTIntegerConstant) arrayDeclarator.expr).value * 4;
+		int size = ((ASTIntegerConstant) arrayDeclarator.expr).value;
 		arr_cnt *= size;
 		if (arrayDeclarator.declarator instanceof ASTVariableDeclarator) {
 			String name = arrayDeclarator.declarator.getName();
-			quats.add(new Quat("new", (ASTNode) new ASTIntegerConstant(arr_cnt, 1), null,
+			arr_map.put(name, arr_cnt / size);
+			quats.add(new Quat("new", (ASTNode) new ASTIntegerConstant(arr_cnt * 4, 1), null,
 					(ASTNode) new ASTStringConstant(name, 1)));
 			arr_cnt = 1;
 		} else
@@ -92,14 +94,34 @@ public class MyICBuilder implements ASTVisitor {
 		quats.add(new Quat("get_param", null, null, new ASTStringConstant(name, 1)));
 	}
 
+	ASTNode a1;
+	boolean arr_flag = false;
+
 	@Override
 	public void visit(ASTArrayAccess arrayAccess) throws Exception {
-		String name = ((ASTIdentifier) arrayAccess.arrayName).value;
-		ASTNode temp = new TemporaryValue(++temp_id);
-		visit(arrayAccess.elements.get(0));
-		ASTNode a = (ASTNode) map.get(arrayAccess.elements.get(0));
-		quats.add(new Quat("=[]", new ASTStringConstant(name, 1), a, temp));
-		map.put(arrayAccess, temp);
+		ASTNode return_v;
+		if (arrayAccess.arrayName instanceof ASTIdentifier) {
+			String name = ((ASTIdentifier) arrayAccess.arrayName).value;
+			visit(arrayAccess.elements.get(0));
+			ASTNode a = (ASTNode) map.get(arrayAccess.elements.get(0));
+			ASTNode temp1 = new TemporaryValue(++temp_id);
+			if (arr_flag) {
+				quats.add(new Quat("*", a, new ASTIntegerConstant(arr_map.get(name), 1), temp1));
+				quats.add(new Quat("+", temp1, a1, temp1));
+				quats.add(new Quat("=[]", new ASTStringConstant(name, 1), temp1, temp1));
+			} else {
+				quats.add(new Quat("=[]", new ASTStringConstant(name, 1), a, temp1));
+			}
+			return_v = temp1;
+			arr_flag = false;
+		} else {
+			arr_flag = true;
+			visit(arrayAccess.elements.get(0));
+			a1 = (ASTNode) map.get(arrayAccess.elements.get(0));
+			visit(arrayAccess.arrayName);
+			return_v = map.get(arrayAccess.arrayName);
+		}
+		map.put(arrayAccess, return_v);
 	}
 
 	@Override

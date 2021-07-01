@@ -1,693 +1,308 @@
-var $maxint i32
-var $dist <[50]> i32
-var $prev <[50]> i32
-var $cc <[50][50]> i32
-var $n i32
-var $line i32
-func &Dijkskra(var %n i32, var %v i32) void{
-var %s <[50]> i32
-var %i i32
-dassign %8(constval i32 1)
-dassign %i(regread i32 %8)
-@1LoopCheckLabel:
-dassign %9(
-	le i32(dread i32 %i,dread i32 %n))
-dassign %10(regread i32 %9)
-brfalse <@1LoopEndLabel>(regread i32 %10)
-dassign %11(constval i32 0)
-dassign %11(
-	add i32(regread i32 %11,dread i32 %i))
-dassign %11(
-	mul i32(regread i32 %11,constval i32 4))
-dassign %12(constval i32 4)
-dassign %11(
-	add i32(regread i32 %11,regread i32 %12))
-dassign %13(constval i32 0)
-dassign %13(
-	add i32(regread i32 %13,dread i32 %v))
-dassign %13(
-	mul i32(regread i32 %13,constval i32 50))
-dassign %13(
-	add i32(regread i32 %13,dread i32 %i))
-dassign %13(
-	mul i32(regread i32 %13,constval i32 4))
-dassign %14(constval i32 404)
-dassign %13(
-	add i32(regread i32 %13,regread i32 %14))
-dassign %13(
-	iread i32(regread i32 %13))
-iassign <*[50]> i32(regread i32 %11,regread i32 %13)
-dassign %15(constval i32 0)
-dassign %15(
-	add i32(regread i32 %15,dread i32 %i))
-dassign %15(
-	mul i32(regread i32 %15,constval i32 4))
-dassign %16(constval i32 8)
-dassign %15(
-	add i32(regread i32 %15,regread i32 %16))
-dassign %17(constval i32 0)
-iassignfpoff <*[50]> i32(regread i32 %15,regread i32 %17)
-dassign %18(constval i32 0)
-dassign %18(
-	add i32(regread i32 %18,dread i32 %i))
-dassign %18(
-	mul i32(regread i32 %18,constval i32 4))
-dassign %19(constval i32 4)
-dassign %18(
-	add i32(regread i32 %18,regread i32 %19))
-dassign %18(
-	iread i32(regread i32 %18))
-dassign $maxint(
-	iread i32(constval i32 0))
-dassign %20(
-	eq i32(regread i32 %18,dread i32 $maxint))
-dassign %21(regread i32 %20)
-brfalse <@1otherwise1>(regread i32 %21)
-dassign %22(constval i32 0)
-dassign %22(
-	add i32(regread i32 %22,dread i32 %i))
-dassign %22(
-	mul i32(regread i32 %22,constval i32 4))
-dassign %23(constval i32 204)
-dassign %22(
-	add i32(regread i32 %22,regread i32 %23))
-dassign %24(constval i32 0)
-iassign <*[50]> i32(regread i32 %22,regread i32 %24)
-goto <@1endif>
-@1otherwise1:
-dassign %25(constval i32 0)
-dassign %25(
-	add i32(regread i32 %25,dread i32 %i))
-dassign %25(
-	mul i32(regread i32 %25,constval i32 4))
-dassign %26(constval i32 204)
-dassign %25(
-	add i32(regread i32 %25,regread i32 %26))
-iassign <*[50]> i32(regread i32 %25,dread i32 %v)
-@1endif:
-@1LoopStepLabel:
-dassign %27(constval i32 1)
-dassign %i(
-	add i32(dread i32 %i,regread i32 %27))
-dassign %28(dread i32 %i)
-goto <@1LoopCheckLabel>
-@1LoopEndLabel:
-dassign %29(constval i32 0)
-dassign %29(
-	add i32(regread i32 %29,dread i32 %v))
-dassign %29(
-	mul i32(regread i32 %29,constval i32 4))
-dassign %30(constval i32 4)
-dassign %29(
-	add i32(regread i32 %29,regread i32 %30))
-dassign %31(constval i32 0)
-iassign <*[50]> i32(regread i32 %29,regread i32 %31)
-dassign %32(constval i32 0)
-dassign %32(
-	add i32(regread i32 %32,dread i32 %v))
-dassign %32(
-	mul i32(regread i32 %32,constval i32 4))
-dassign %33(constval i32 8)
-dassign %32(
-	add i32(regread i32 %32,regread i32 %33))
-dassign %34(constval i32 1)
-iassignfpoff <*[50]> i32(regread i32 %32,regread i32 %34)
-var %i i32
-var %tmp i32
-var %u i32
-dassign %36(constval i32 2)
-dassign %i(regread i32 %36)
-@2LoopCheckLabel:
-dassign %37(
-	le i32(dread i32 %i,dread i32 %n))
-dassign %38(regread i32 %37)
-brfalse <@2LoopEndLabel>(regread i32 %38)
-dassign $maxint(
-	iread i32(constval i32 0))
-dassign %tmp(dread i32 $maxint)
-dassign %u(dread i32 %v)
-var %j i32
-dassign %42(constval i32 1)
-dassign %j(regread i32 %42)
-@3LoopCheckLabel:
-dassign %43(
-	le i32(dread i32 %j,dread i32 %n))
-dassign %44(regread i32 %43)
-brfalse <@3LoopEndLabel>(regread i32 %44)
-dassign %45(constval i32 0)
-dassign %45(
-	add i32(regread i32 %45,dread i32 %j))
-dassign %45(
-	mul i32(regread i32 %45,constval i32 4))
-dassign %46(constval i32 8)
-dassign %45(
-	add i32(regread i32 %45,regread i32 %46))
-dassign %45(
-	ireadfpoff i32(regread i32 %45))
-dassign %47(
-	lnot i32(regread i32 %45))
-brfalse <@1shortwaytrue>(regread i32 %47)
-dassign %48(constval i32 0)
-dassign %48(
-	add i32(regread i32 %48,dread i32 %j))
-dassign %48(
-	mul i32(regread i32 %48,constval i32 4))
-dassign %49(constval i32 4)
-dassign %48(
-	add i32(regread i32 %48,regread i32 %49))
-dassign %48(
-	iread i32(regread i32 %48))
-dassign %50(
-	lt i32(regread i32 %48,dread i32 %tmp))
-dassign %51(regread i32 %50)
-dassign %52(
-	land i32(regread i32 %47,regread i32 %51))
-goto <@1shortwayfalse>
-@1shortwaytrue:
-dassign %53(constval i32 0)
-goto <@1shortwayend>
-@1shortwayfalse:
-dassign %53(regread i32 %52)
-@1shortwayend:
-brfalse <@2otherwise1>(regread i32 %53)
-dassign %u(dread i32 %j)
-dassign %54(constval i32 0)
-dassign %54(
-	add i32(regread i32 %54,dread i32 %j))
-dassign %54(
-	mul i32(regread i32 %54,constval i32 4))
-dassign %55(constval i32 4)
-dassign %54(
-	add i32(regread i32 %54,regread i32 %55))
-dassign %54(
-	iread i32(regread i32 %54))
-dassign %tmp(regread i32 %54)
-goto <@2endif>
-@2otherwise1:
-@2endif:
-@3LoopStepLabel:
-dassign %56(constval i32 1)
-dassign %j(
-	add i32(dread i32 %j,regread i32 %56))
-dassign %57(dread i32 %j)
-goto <@3LoopCheckLabel>
-@3LoopEndLabel:
-dassign %58(constval i32 0)
-dassign %58(
-	add i32(regread i32 %58,dread i32 %u))
-dassign %58(
-	mul i32(regread i32 %58,constval i32 4))
-dassign %59(constval i32 8)
-dassign %58(
-	add i32(regread i32 %58,regread i32 %59))
-dassign %60(constval i32 1)
-iassignfpoff <*[50]> i32(regread i32 %58,regread i32 %60)
-var %j i32
-dassign %62(constval i32 1)
-dassign %j(regread i32 %62)
-@4LoopCheckLabel:
-dassign %63(
-	le i32(dread i32 %j,dread i32 %n))
-dassign %64(regread i32 %63)
-brfalse <@4LoopEndLabel>(regread i32 %64)
-dassign %65(constval i32 0)
-dassign %65(
-	add i32(regread i32 %65,dread i32 %j))
-dassign %65(
-	mul i32(regread i32 %65,constval i32 4))
-dassign %66(constval i32 8)
-dassign %65(
-	add i32(regread i32 %65,regread i32 %66))
-dassign %65(
-	ireadfpoff i32(regread i32 %65))
-dassign %67(
-	lnot i32(regread i32 %65))
-brfalse <@2shortwaytrue>(regread i32 %67)
-dassign %68(constval i32 0)
-dassign %68(
-	add i32(regread i32 %68,dread i32 %u))
-dassign %68(
-	mul i32(regread i32 %68,constval i32 50))
-dassign %68(
-	add i32(regread i32 %68,dread i32 %j))
-dassign %68(
-	mul i32(regread i32 %68,constval i32 4))
-dassign %69(constval i32 404)
-dassign %68(
-	add i32(regread i32 %68,regread i32 %69))
-dassign %68(
-	iread i32(regread i32 %68))
-dassign $maxint(
-	iread i32(constval i32 0))
-dassign %70(
-	lt i32(regread i32 %68,dread i32 $maxint))
-dassign %71(regread i32 %70)
-dassign %72(
-	land i32(regread i32 %67,regread i32 %71))
-goto <@2shortwayfalse>
-@2shortwaytrue:
-dassign %73(constval i32 0)
-goto <@2shortwayend>
-@2shortwayfalse:
-dassign %73(regread i32 %72)
-@2shortwayend:
-brfalse <@3otherwise1>(regread i32 %73)
-var %newdist i32
-dassign %75(constval i32 0)
-dassign %75(
-	add i32(regread i32 %75,dread i32 %u))
-dassign %75(
-	mul i32(regread i32 %75,constval i32 4))
-dassign %76(constval i32 4)
-dassign %75(
-	add i32(regread i32 %75,regread i32 %76))
-dassign %75(
-	iread i32(regread i32 %75))
-dassign %77(constval i32 0)
-dassign %77(
-	add i32(regread i32 %77,dread i32 %u))
-dassign %77(
-	mul i32(regread i32 %77,constval i32 50))
-dassign %77(
-	add i32(regread i32 %77,dread i32 %j))
-dassign %77(
-	mul i32(regread i32 %77,constval i32 4))
-dassign %78(constval i32 404)
-dassign %77(
-	add i32(regread i32 %77,regread i32 %78))
-dassign %77(
-	iread i32(regread i32 %77))
-dassign %79(
-	add i32(regread i32 %75,regread i32 %77))
-dassign %80(regread i32 %79)
-dassign %newdist(regread i32 %80)
-dassign %81(constval i32 0)
-dassign %81(
-	add i32(regread i32 %81,dread i32 %j))
-dassign %81(
-	mul i32(regread i32 %81,constval i32 4))
-dassign %82(constval i32 4)
-dassign %81(
-	add i32(regread i32 %81,regread i32 %82))
-dassign %81(
-	iread i32(regread i32 %81))
-dassign %83(
-	lt i32(dread i32 %newdist,regread i32 %81))
-dassign %84(regread i32 %83)
-brfalse <@4otherwise1>(regread i32 %84)
-dassign %85(constval i32 0)
-dassign %85(
-	add i32(regread i32 %85,dread i32 %j))
-dassign %85(
-	mul i32(regread i32 %85,constval i32 4))
-dassign %86(constval i32 4)
-dassign %85(
-	add i32(regread i32 %85,regread i32 %86))
-iassign <*[50]> i32(regread i32 %85,dread i32 %newdist)
-dassign %87(constval i32 0)
-dassign %87(
-	add i32(regread i32 %87,dread i32 %j))
-dassign %87(
-	mul i32(regread i32 %87,constval i32 4))
-dassign %88(constval i32 204)
-dassign %87(
-	add i32(regread i32 %87,regread i32 %88))
-iassign <*[50]> i32(regread i32 %87,dread i32 %u)
-goto <@4endif>
-@4otherwise1:
-@4endif:
-goto <@3endif>
-@3otherwise1:
-@3endif:
-@4LoopStepLabel:
-dassign %89(constval i32 1)
-dassign %j(
-	add i32(dread i32 %j,regread i32 %89))
-dassign %90(dread i32 %j)
-goto <@4LoopCheckLabel>
-@4LoopEndLabel:
-@2LoopStepLabel:
-dassign %91(constval i32 1)
-dassign %i(
-	add i32(dread i32 %i,regread i32 %91))
-dassign %92(dread i32 %i)
-goto <@2LoopCheckLabel>
-@2LoopEndLabel:
-return ()}
+0 new,4,_,maxint
+1 =,999999,_,maxint
+2 new,200,_,dist
+3 new,200,_,prev
+4 new,10000,_,cc
+5 new,4,_,n
+6 new,4,_,line
 
-func &searchPath(var %v i32, var %u i32) void{
-var %que <[50]> i32
-var %tot i32
-var %tmp i32
-dassign %96(constval i32 1)
-dassign %tot(regread i32 %96)
-dassign %97(constval i32 0)
-dassign %97(
-	add i32(regread i32 %97,dread i32 %tot))
-dassign %97(
-	mul i32(regread i32 %97,constval i32 4))
-dassign %98(constval i32 8)
-dassign %97(
-	add i32(regread i32 %97,regread i32 %98))
-iassignfpoff <*[50]> i32(regread i32 %97,dread i32 %u)
-dassign %99(dread i32 %tot)
-dassign %100(constval i32 1)
-dassign %tot(
-	add i32(dread i32 %tot,regread i32 %100))
-dassign %102(constval i32 0)
-dassign %102(
-	add i32(regread i32 %102,dread i32 %u))
-dassign %102(
-	mul i32(regread i32 %102,constval i32 4))
-dassign %103(constval i32 204)
-dassign %102(
-	add i32(regread i32 %102,regread i32 %103))
-dassign %102(
-	iread i32(regread i32 %102))
-dassign %tmp(regread i32 %102)
-@5LoopCheckLabel:
-dassign %104(
-	ne i32(dread i32 %tmp,dread i32 %v))
-dassign %105(regread i32 %104)
-brfalse <@5LoopEndLabel>(regread i32 %105)
-dassign %106(constval i32 0)
-dassign %106(
-	add i32(regread i32 %106,dread i32 %tot))
-dassign %106(
-	mul i32(regread i32 %106,constval i32 4))
-dassign %107(constval i32 8)
-dassign %106(
-	add i32(regread i32 %106,regread i32 %107))
-iassignfpoff <*[50]> i32(regread i32 %106,dread i32 %tmp)
-dassign %108(dread i32 %tot)
-dassign %109(constval i32 1)
-dassign %tot(
-	add i32(dread i32 %tot,regread i32 %109))
-dassign %110(constval i32 0)
-dassign %110(
-	add i32(regread i32 %110,dread i32 %tmp))
-dassign %110(
-	mul i32(regread i32 %110,constval i32 4))
-dassign %111(constval i32 204)
-dassign %110(
-	add i32(regread i32 %110,regread i32 %111))
-dassign %110(
-	iread i32(regread i32 %110))
-dassign %tmp(regread i32 %110)
-@5LoopStepLabel:
-goto <@5LoopCheckLabel>
-@5LoopEndLabel:
-dassign %112(constval i32 0)
-dassign %112(
-	add i32(regread i32 %112,dread i32 %tot))
-dassign %112(
-	mul i32(regread i32 %112,constval i32 4))
-dassign %113(constval i32 8)
-dassign %112(
-	add i32(regread i32 %112,regread i32 %113))
-iassignfpoff <*[50]> i32(regread i32 %112,dread i32 %v)
-var %i i32
-dassign %i(dread i32 %tot)
-@6LoopCheckLabel:
-dassign %115(constval i32 1)
-dassign %116(
-	ge i32(dread i32 %i,regread i32 %115))
-dassign %117(regread i32 %116)
-brfalse <@6LoopEndLabel>(regread i32 %117)
-dassign %118(constval i32 0)
-dassign %118(
-	add i32(regread i32 %118,dread i32 %i))
-dassign %118(
-	mul i32(regread i32 %118,constval i32 4))
-dassign %119(constval i32 8)
-dassign %118(
-	add i32(regread i32 %118,regread i32 %119))
-dassign %118(
-	ireadfpoff i32(regread i32 %118))
-call Mars_PrintInt(regread i32 %118)
-dassign %120(constval i32 1)
-dassign %121(
-	ne i32(dread i32 %i,regread i32 %120))
-dassign %122(regread i32 %121)
-brfalse <@5otherwise1>(regread i32 %122)
-dassign %123(conststr a32 "->")
-call Mars_PrintStr(regread a32 %123)
-goto <@5endif>
-@5otherwise1:
-dassign %124(conststr a32 "\n")
-call Mars_PrintStr(regread a32 %124)
-@5endif:
-@6LoopStepLabel:
-dassign %125(constval i32 1)
-dassign %i(
-	sub i32(dread i32 %i,regread i32 %125))
-dassign %126(dread i32 %i)
-goto <@6LoopCheckLabel>
-@6LoopEndLabel:
-return ()}
+7 enter,31,_,Dijkskra
+8 new,4,_,n
+9 get_param,_,_,n
+10 new,4,_,v
+11 get_param,_,_,v
+12 new,200,_,s
+13 new,4,_,i
+14 =,1,_,i
+15 <=,i,n,%1
+16 jump_true,%1,_,20
+17 jump_false,%1,_,40
+18 ++,i,_,i
+19 jump,_,_,15
+20 *,v,50,%2
+21 +,%2,i,%2
+22 =[],cc,%2,%2
+23 =[],dist,i,%3
+24 =,%2,_,%3
+25 []=,_,_,%3
+26 =[],s,i,%4
+27 =,0,_,%4
+28 []=,_,_,%4
+29 =[],dist,i,%5
+30 ==,%5,maxint,%6
+31 jump_false,%6,_,36
+32 =[],prev,i,%7
+33 =,0,_,%7
+34 []=,_,_,%7
+35 jump,_,_,39
+36 =[],prev,i,%8
+37 =,v,_,%8
+38 []=,_,_,%8
+39 jump,_,_,18
+40 =[],dist,v,%9
+41 =,0,_,%9
+42 []=,_,_,%9
+43 =[],s,v,%10
+44 =,1,_,%10
+45 []=,_,_,%10
+46 new,4,_,i
+47 =,2,_,i
+48 <=,i,n,%11
+49 jump_true,%11,_,53
+50 jump_false,%11,_,112
+51 ++,i,_,i
+52 jump,_,_,48
+53 new,4,_,tmp
+54 =,maxint,_,tmp
+55 new,4,_,u
+56 =,v,_,u
+57 new,4,_,j
+58 =,1,_,j
+59 <=,j,n,%12
+60 jump_true,%12,_,64
+61 jump_false,%12,_,75
+62 ++,j,_,j
+63 jump,_,_,59
+64 =[],dist,j,%13
+65 <,%13,tmp,%14
+66 =[],s,j,%16
+67 !,%16,_,%15
+68 &&,%15,%14,%17
+69 jump_false,%17,_,73
+70 =,j,_,u
+71 =[],dist,j,%18
+72 =,%18,_,tmp
+73 jump,_,_,74
+74 jump,_,_,62
+75 =[],s,u,%19
+76 =,1,_,%19
+77 []=,_,_,%19
+78 new,4,_,j
+79 =,1,_,j
+80 <=,j,n,%20
+81 jump_true,%20,_,85
+82 jump_false,%20,_,111
+83 ++,j,_,j
+84 jump,_,_,80
+85 *,u,50,%21
+86 +,%21,j,%21
+87 =[],cc,%21,%21
+88 <,%21,maxint,%22
+89 =[],s,j,%24
+90 !,%24,_,%23
+91 &&,%23,%22,%25
+92 jump_false,%25,_,109
+93 new,4,_,newdist
+94 =[],dist,u,%26
+95 *,u,50,%27
+96 +,%27,j,%27
+97 =[],cc,%27,%27
+98 +,%26,%27,newdist
+99 =[],dist,j,%28
+100 <,newdist,%28,%29
+101 jump_false,%29,_,108
+102 =[],dist,j,%30
+103 =,newdist,_,%30
+104 []=,_,_,%30
+105 =[],prev,j,%31
+106 =,u,_,%31
+107 []=,_,_,%31
+108 jump,_,_,109
+109 jump,_,_,110
+110 jump,_,_,83
+111 jump,_,_,51
+112 return,_,_,_
+113 leave,_,_,31
+114 end,_,_,_
 
-func &main() i32{
-var %p i32
-var %q i32
-var %len i32
-dassign $n(
-	iread i32(constval i32 10404))
-call Mars_GetInt()
-dassign %127(regread i32 %retval0)
-dassign $n(regread i32 %127)
-iassign <*i32>(constval i32 10404,dread i32 $n)
-dassign $line(
-	iread i32(constval i32 10408))
-call Mars_GetInt()
-dassign %128(regread i32 %retval0)
-dassign $line(regread i32 %128)
-iassign <*i32>(constval i32 10408,dread i32 $line)
-var %i i32
-dassign %133(constval i32 1)
-dassign %i(regread i32 %133)
-@7LoopCheckLabel:
-dassign $n(
-	iread i32(constval i32 10404))
-dassign %134(
-	le i32(dread i32 %i,dread i32 $n))
-dassign %135(regread i32 %134)
-brfalse <@7LoopEndLabel>(regread i32 %135)
-var %j i32
-dassign %137(constval i32 1)
-dassign %j(regread i32 %137)
-@8LoopCheckLabel:
-dassign $n(
-	iread i32(constval i32 10404))
-dassign %138(
-	le i32(dread i32 %j,dread i32 $n))
-dassign %139(regread i32 %138)
-brfalse <@8LoopEndLabel>(regread i32 %139)
-dassign %140(constval i32 0)
-dassign %140(
-	add i32(regread i32 %140,dread i32 %i))
-dassign %140(
-	mul i32(regread i32 %140,constval i32 50))
-dassign %140(
-	add i32(regread i32 %140,dread i32 %j))
-dassign %140(
-	mul i32(regread i32 %140,constval i32 4))
-dassign %141(constval i32 404)
-dassign %140(
-	add i32(regread i32 %140,regread i32 %141))
-dassign $maxint(
-	iread i32(constval i32 0))
-iassign <*[50][50]> i32(regread i32 %140,dread i32 $maxint)
-@8LoopStepLabel:
-dassign %142(dread i32 %j)
-dassign %143(constval i32 1)
-dassign %j(
-	add i32(dread i32 %j,regread i32 %143))
-goto <@8LoopCheckLabel>
-@8LoopEndLabel:
-@7LoopStepLabel:
-dassign %144(constval i32 1)
-dassign %i(
-	add i32(dread i32 %i,regread i32 %144))
-dassign %145(dread i32 %i)
-goto <@7LoopCheckLabel>
-@7LoopEndLabel:
-var %i i32
-dassign %147(constval i32 1)
-dassign %i(regread i32 %147)
-@9LoopCheckLabel:
-dassign $line(
-	iread i32(constval i32 10408))
-dassign %148(
-	le i32(dread i32 %i,dread i32 $line))
-dassign %149(regread i32 %148)
-brfalse <@9LoopEndLabel>(regread i32 %149)
-call Mars_GetInt()
-dassign %150(regread i32 %retval0)
-dassign %p(regread i32 %150)
-call Mars_GetInt()
-dassign %151(regread i32 %retval0)
-dassign %q(regread i32 %151)
-call Mars_GetInt()
-dassign %152(regread i32 %retval0)
-dassign %len(regread i32 %152)
-dassign %153(constval i32 0)
-dassign %153(
-	add i32(regread i32 %153,dread i32 %p))
-dassign %153(
-	mul i32(regread i32 %153,constval i32 50))
-dassign %153(
-	add i32(regread i32 %153,dread i32 %q))
-dassign %153(
-	mul i32(regread i32 %153,constval i32 4))
-dassign %154(constval i32 404)
-dassign %153(
-	add i32(regread i32 %153,regread i32 %154))
-dassign %153(
-	iread i32(regread i32 %153))
-dassign %155(
-	lt i32(dread i32 %len,regread i32 %153))
-dassign %156(regread i32 %155)
-brfalse <@6otherwise1>(regread i32 %156)
-dassign %157(constval i32 0)
-dassign %157(
-	add i32(regread i32 %157,dread i32 %p))
-dassign %157(
-	mul i32(regread i32 %157,constval i32 50))
-dassign %157(
-	add i32(regread i32 %157,dread i32 %q))
-dassign %157(
-	mul i32(regread i32 %157,constval i32 4))
-dassign %158(constval i32 404)
-dassign %157(
-	add i32(regread i32 %157,regread i32 %158))
-iassign <*[50][50]> i32(regread i32 %157,dread i32 %len)
-dassign %159(constval i32 0)
-dassign %159(
-	add i32(regread i32 %159,dread i32 %q))
-dassign %159(
-	mul i32(regread i32 %159,constval i32 50))
-dassign %159(
-	add i32(regread i32 %159,dread i32 %p))
-dassign %159(
-	mul i32(regread i32 %159,constval i32 4))
-dassign %160(constval i32 404)
-dassign %159(
-	add i32(regread i32 %159,regread i32 %160))
-iassign <*[50][50]> i32(regread i32 %159,dread i32 %len)
-goto <@6endif>
-@6otherwise1:
-@6endif:
-@9LoopStepLabel:
-dassign %161(constval i32 1)
-dassign %i(
-	add i32(dread i32 %i,regread i32 %161))
-dassign %162(dread i32 %i)
-goto <@9LoopCheckLabel>
-@9LoopEndLabel:
-var %i i32
-dassign %164(constval i32 1)
-dassign %i(regread i32 %164)
-@10LoopCheckLabel:
-dassign $n(
-	iread i32(constval i32 10404))
-dassign %165(
-	le i32(dread i32 %i,dread i32 $n))
-dassign %166(regread i32 %165)
-brfalse <@10LoopEndLabel>(regread i32 %166)
-dassign %167(constval i32 0)
-dassign %167(
-	add i32(regread i32 %167,dread i32 %i))
-dassign %167(
-	mul i32(regread i32 %167,constval i32 4))
-dassign %168(constval i32 4)
-dassign %167(
-	add i32(regread i32 %167,regread i32 %168))
-dassign $maxint(
-	iread i32(constval i32 0))
-iassign <*[50]> i32(regread i32 %167,dread i32 $maxint)
-@10LoopStepLabel:
-dassign %169(constval i32 1)
-dassign %i(
-	add i32(dread i32 %i,regread i32 %169))
-dassign %170(dread i32 %i)
-goto <@10LoopCheckLabel>
-@10LoopEndLabel:
-var %i i32
-dassign %172(constval i32 1)
-dassign %i(regread i32 %172)
-@11LoopCheckLabel:
-dassign $n(
-	iread i32(constval i32 10404))
-dassign %173(
-	le i32(dread i32 %i,dread i32 $n))
-dassign %174(regread i32 %173)
-brfalse <@11LoopEndLabel>(regread i32 %174)
-var %j i32
-dassign %176(constval i32 1)
-dassign %j(regread i32 %176)
-@12LoopCheckLabel:
-dassign $n(
-	iread i32(constval i32 10404))
-dassign %177(
-	le i32(dread i32 %j,dread i32 $n))
-dassign %178(regread i32 %177)
-brfalse <@12LoopEndLabel>(regread i32 %178)
-dassign %179(constval i32 0)
-dassign %179(
-	add i32(regread i32 %179,dread i32 %i))
-dassign %179(
-	mul i32(regread i32 %179,constval i32 50))
-dassign %179(
-	add i32(regread i32 %179,dread i32 %j))
-dassign %179(
-	mul i32(regread i32 %179,constval i32 4))
-dassign %180(constval i32 404)
-dassign %179(
-	add i32(regread i32 %179,regread i32 %180))
-dassign %179(
-	iread i32(regread i32 %179))
-call Mars_PrintInt(regread i32 %179)
-@12LoopStepLabel:
-dassign %181(constval i32 1)
-dassign %j(
-	add i32(dread i32 %j,regread i32 %181))
-dassign %182(dread i32 %j)
-goto <@12LoopCheckLabel>
-@12LoopEndLabel:
-dassign %183(conststr a32 "\n")
-call Mars_PrintStr(regread a32 %183)
-@11LoopStepLabel:
-dassign %184(constval i32 1)
-dassign %i(
-	add i32(dread i32 %i,regread i32 %184))
-dassign %185(dread i32 %i)
-goto <@11LoopCheckLabel>
-@11LoopEndLabel:
-dassign $n(
-	iread i32(constval i32 10404))
-dassign %186(constval i32 1)
-call Dijkskra(dread i32 $n,regread i32 %186)
-dassign %187(conststr a32 "Shortest path length from source point to last vertex:")
-call Mars_PrintStr(regread a32 %187)
-dassign $n(
-	iread i32(constval i32 10404))
-dassign %188(constval i32 0)
-dassign %188(
-	add i32(regread i32 %188,dread i32 $n))
-dassign %188(
-	mul i32(regread i32 %188,constval i32 4))
-dassign %189(constval i32 4)
-dassign %188(
-	add i32(regread i32 %188,regread i32 %189))
-dassign %188(
-	iread i32(regread i32 %188))
-call Mars_PrintInt(regread i32 %188)
-dassign %190(conststr a32 "\nThe path is:\n")
-call Mars_PrintStr(regread a32 %190)
-dassign %191(constval i32 1)
-dassign $n(
-	iread i32(constval i32 10404))
-call searchPath(regread i32 %191,dread i32 $n)
-dassign %192(constval i32 0)
-return (regread i32 %192)}
+115 enter,15,_,searchPath
+116 new,4,_,v
+117 get_param,_,_,v
+118 new,4,_,u
+119 get_param,_,_,u
+120 new,200,_,que
+121 new,4,_,tot
+122 =,1,_,tot
+123 =[],que,tot,%1
+124 =,u,_,%1
+125 []=,_,_,%1
+126 =,tot,_,%2
+127 ++,tot,_,tot
+128 new,4,_,tmp
+129 =[],prev,u,%3
+130 =,%3,_,tmp
+131 !,tmp,v,tmp
+132 jump_true,tmp,_,135
+133 jump_false,tmp,_,143
+134 jump,_,_,131
+135 =[],que,tot,%4
+136 =,tmp,_,%4
+137 []=,_,_,%4
+138 =,tot,_,%5
+139 ++,tot,_,tot
+140 =[],prev,tmp,%6
+141 =,%6,_,tmp
+142 jump,_,_,134
+143 =[],que,tot,%7
+144 =,v,_,%7
+145 []=,_,_,%7
+146 new,4,_,i
+147 =,tot,_,i
+148 >=,i,1,%8
+149 jump_true,%8,_,153
+150 jump_false,%8,_,170
+151 --,i,_,i
+152 jump,_,_,148
+153 =[],que,i,%9
+154 =,%9,_,%10
+155 param,_,_,%10
+156 Call,_,_,Mars_PrintInt
+157 get_return,_,_,%11
+158 !,i,1,i
+159 jump_false,i,_,165
+160 =,"->",_,%12
+161 param,_,_,%12
+162 Call,_,_,Mars_PrintStr
+163 get_return,_,_,%13
+164 jump,_,_,169
+165 =,"\n",_,%14
+166 param,_,_,%14
+167 Call,_,_,Mars_PrintStr
+168 get_return,_,_,%15
+169 jump,_,_,151
+170 return,_,_,_
+171 leave,_,_,15
+172 end,_,_,_
 
+173 enter,37,_,main
+174 Call,_,_,Mars_GetInt
+175 get_return,_,_,%1
+176 =,%1,_,n
+177 Call,_,_,Mars_GetInt
+178 get_return,_,_,%2
+179 =,%2,_,line
+180 new,4,_,p
+181 new,4,_,q
+182 new,4,_,len
+183 new,4,_,i
+184 =,1,_,i
+185 <=,i,n,%3
+186 jump_true,%3,_,190
+187 jump_false,%3,_,205
+188 ++,i,_,i
+189 jump,_,_,185
+190 new,4,_,j
+191 =,1,_,j
+192 <=,j,n,%4
+193 jump_true,%4,_,198
+194 jump_false,%4,_,204
+195 =,j,_,%5
+196 ++,j,_,j
+197 jump,_,_,192
+198 *,i,50,%6
+199 +,%6,j,%6
+200 =[],cc,%6,%6
+201 =,maxint,_,%6
+202 []=,_,_,%6
+203 jump,_,_,195
+204 jump,_,_,188
+205 new,4,_,i
+206 =,1,_,i
+207 <=,i,line,%7
+208 jump_true,%7,_,212
+209 jump_false,%7,_,238
+210 ++,i,_,i
+211 jump,_,_,207
+212 Call,_,_,Mars_GetInt
+213 get_return,_,_,%8
+214 =,%8,_,p
+215 Call,_,_,Mars_GetInt
+216 get_return,_,_,%9
+217 =,%9,_,q
+218 Call,_,_,Mars_GetInt
+219 get_return,_,_,%10
+220 =,%10,_,len
+221 *,p,50,%11
+222 +,%11,q,%11
+223 =[],cc,%11,%11
+224 <,len,%11,%12
+225 jump_false,%12,_,236
+226 *,p,50,%13
+227 +,%13,q,%13
+228 =[],cc,%13,%13
+229 =,len,_,%13
+230 []=,_,_,%13
+231 *,q,50,%14
+232 +,%14,p,%14
+233 =[],cc,%14,%14
+234 =,len,_,%14
+235 []=,_,_,%14
+236 jump,_,_,237
+237 jump,_,_,210
+238 new,4,_,i
+239 =,1,_,i
+240 <=,i,n,%15
+241 jump_true,%15,_,245
+242 jump_false,%15,_,249
+243 ++,i,_,i
+244 jump,_,_,240
+245 =[],dist,i,%16
+246 =,maxint,_,%16
+247 []=,_,_,%16
+248 jump,_,_,243
+249 new,4,_,i
+250 =,1,_,i
+251 <=,i,n,%17
+252 jump_true,%17,_,256
+253 jump_false,%17,_,276
+254 ++,i,_,i
+255 jump,_,_,251
+256 new,4,_,j
+257 =,1,_,j
+258 <=,j,n,%18
+259 jump_true,%18,_,263
+260 jump_false,%18,_,271
+261 ++,j,_,j
+262 jump,_,_,258
+263 *,i,50,%19
+264 +,%19,j,%19
+265 =[],cc,%19,%19
+266 =,%19,_,%20
+267 param,_,_,%20
+268 Call,_,_,Mars_PrintInt
+269 get_return,_,_,%21
+270 jump,_,_,261
+271 =,"\n",_,%22
+272 param,_,_,%22
+273 Call,_,_,Mars_PrintStr
+274 get_return,_,_,%23
+275 jump,_,_,254
+276 =,n,_,%24
+277 param,_,_,%24
+278 =,1,_,%25
+279 param,_,_,%25
+280 Call,_,_,Dijkskra
+281 get_return,_,_,%26
+282 =,"Shortest path length from source point to last vertex:",_,%27
+283 param,_,_,%27
+284 Call,_,_,Mars_PrintStr
+285 get_return,_,_,%28
+286 =[],dist,n,%29
+287 =,%29,_,%30
+288 param,_,_,%30
+289 Call,_,_,Mars_PrintInt
+290 get_return,_,_,%31
+291 =,"\nThe path is:\n",_,%32
+292 param,_,_,%32
+293 Call,_,_,Mars_PrintStr
+294 get_return,_,_,%33
+295 =,1,_,%34
+296 param,_,_,%34
+297 =,n,_,%35
+298 param,_,_,%35
+299 Call,_,_,searchPath
+300 get_return,_,_,%36
+301 =,0,_,%37
+302 return,_,_,%37
+303 leave,_,_,37
+304 end,_,_,_
