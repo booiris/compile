@@ -139,17 +139,13 @@ public class myCodeGen implements IMiniCCCodeGen {
 		} else if (op.equals("jump") || op.equals("goto") || op.equals("break") || op.equals("continue")) {
 			nc_code.add("j _temp_label_" + String.valueOf(now.res));
 		} else if (op.equals("jump_true")) {
-			if (now.opnd1.charAt(0) == '%') {
-				int temp_index = Integer.valueOf(now.opnd1.substring(1));
-				nc_code.add("lw $t0, -" + String.valueOf(temp_index * 4) + "($fp)");
-				nc_code.add("bne $t0, $0, _temp_label_" + String.valueOf(now.res));
-			}
+			int temp_index = Integer.valueOf(now.opnd1.substring(1));
+			nc_code.add("lw $t0, -" + String.valueOf(temp_index * 4) + "($fp)");
+			nc_code.add("bne $t0, $0, _temp_label_" + String.valueOf(now.res));
 		} else if (op.equals("jump_false")) {
-			if (now.opnd1.charAt(0) == '%') {
-				int temp_index = Integer.valueOf(now.opnd1.substring(1));
-				nc_code.add("lw $t0, -" + String.valueOf(temp_index * 4) + "($fp)");
-				nc_code.add("beq $t0, $0, _temp_label_" + String.valueOf(now.res));
-			}
+			int temp_index = Integer.valueOf(now.opnd1.substring(1));
+			nc_code.add("lw $t0, -" + String.valueOf(temp_index * 4) + "($fp)");
+			nc_code.add("beq $t0, $0, _temp_label_" + String.valueOf(now.res));
 		} else if (op.equals("new")) {
 			if (is_in_func) {
 				max_data += Integer.valueOf(now.opnd1);
